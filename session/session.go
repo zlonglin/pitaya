@@ -117,7 +117,7 @@ type Session interface {
 	SetDataEncoded(encodedData []byte) error
 	SetFrontendData(frontendID string, frontendSessionID int64)
 	Bind(ctx context.Context, uid string) error
-	Kick(ctx context.Context, data []byte) error
+	Kick(ctx context.Context, v interface{}) error
 	OnClose(c func()) error
 	Close()
 	RemoteAddr() net.Addr
@@ -415,8 +415,8 @@ func (s *sessionImpl) Bind(ctx context.Context, uid string) error {
 }
 
 // Kick kicks the user
-func (s *sessionImpl) Kick(ctx context.Context, data []byte) error {
-	err := s.entity.Kick(ctx, data)
+func (s *sessionImpl) Kick(ctx context.Context, v interface{}) error {
+	err := s.entity.Kick(ctx, v)
 	if err != nil {
 		return err
 	}

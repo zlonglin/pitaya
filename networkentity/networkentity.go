@@ -12,7 +12,7 @@ type NetworkEntity interface {
 	Push(route string, v interface{}) error
 	ResponseMID(ctx context.Context, mid uint, v interface{}, isError ...bool) error
 	Close() error
-	Kick(ctx context.Context, data []byte) error
+	Kick(ctx context.Context, v interface{}) error
 	RemoteAddr() net.Addr
 	SendRequest(ctx context.Context, serverID, route string, v interface{}) (*protos.Response, error)
 }

@@ -124,12 +124,12 @@ func (t *TestSvc) TestRequestKickUser(ctx context.Context, userID []byte, data [
 }
 
 // TestRequestKickMe handler for e2e tests
-func (t *TestSvc) TestRequestKickMe(ctx context.Context, data []byte) (*test.TestResponse, error) {
+func (t *TestSvc) TestRequestKickMe(ctx context.Context, v interface{}) (*test.TestResponse, error) {
 	s := t.app.GetSessionFromCtx(ctx)
 	if s == nil {
 		return nil, pitaya.Error(constants.ErrSessionNotFound, "PIT-404")
 	}
-	err := s.Kick(ctx, data)
+	err := s.Kick(ctx, v)
 	if err != nil {
 		return nil, err
 	}

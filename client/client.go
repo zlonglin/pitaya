@@ -261,6 +261,11 @@ func (c *Client) handlePackets() {
 				c.IncomingMsgChan <- m
 			case packet.Kick:
 				logger.Log.Warn("got kick packet from the server! disconnecting...")
+				c.IncomingMsgChan <- &message.Message{
+					Type:  message.Notify,
+					Route: "sys_kick",
+					Data:  p.Data,
+				}
 				c.Disconnect()
 			}
 		case <-c.closeChan:

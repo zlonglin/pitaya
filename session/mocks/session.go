@@ -300,17 +300,17 @@ func (mr *MockSessionMockRecorder) Int8(arg0 interface{}) *gomock.Call {
 }
 
 // Kick mocks base method
-func (m *MockSession) Kick(arg0 context.Context, data []byte) error {
+func (m *MockSession) Kick(arg0 context.Context, v interface{}) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Kick", arg0, data)
+	ret := m.ctrl.Call(m, "Kick", arg0, v)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Kick indicates an expected call of Kick
-func (mr *MockSessionMockRecorder) Kick(arg0 interface{}, data []byte) *gomock.Call {
+func (mr *MockSessionMockRecorder) Kick(arg0 interface{}, v interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Kick", reflect.TypeOf((*MockSession)(nil).Kick), arg0, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Kick", reflect.TypeOf((*MockSession)(nil).Kick), arg0, v)
 }
 
 // OnClose mocks base method
