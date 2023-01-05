@@ -49,8 +49,8 @@ func TestSendKickToUsersLocalSession(t *testing.T) {
 
 	s1 := sessionmocks.NewMockSession(ctrl)
 	s2 := sessionmocks.NewMockSession(ctrl)
-	s1.EXPECT().Kick(context.Background()).Times(1).Return(table.err)
-	s2.EXPECT().Kick(context.Background()).Times(1).Return(table.err)
+	s1.EXPECT().Kick(context.Background(), nil).Times(1).Return(table.err)
+	s2.EXPECT().Kick(context.Background(), nil).Times(1).Return(table.err)
 
 	mockSessionPool := sessionmocks.NewMockSessionPool(ctrl)
 	mockSessionPool.EXPECT().GetSessionByUID(table.uid1).Return(s1).Times(1)
@@ -61,7 +61,7 @@ func TestSendKickToUsersLocalSession(t *testing.T) {
 	builder.SessionPool = mockSessionPool
 	app := builder.Build()
 
-	failedUids, err := app.SendKickToUsers([]string{table.uid1, table.uid2}, table.frontendType)
+	failedUids, err := app.SendKickToUsers([]string{table.uid1, table.uid2}, nil, table.frontendType)
 	assert.Nil(t, failedUids)
 	assert.NoError(t, err)
 }
@@ -80,7 +80,7 @@ func TestSendKickToUsersFail(t *testing.T) {
 	defer ctrl.Finish()
 
 	s1 := sessionmocks.NewMockSession(ctrl)
-	s1.EXPECT().Kick(context.Background()).Times(1).Return(nil)
+	s1.EXPECT().Kick(context.Background(), nil).Times(1).Return(nil)
 
 	mockSessionPool := sessionmocks.NewMockSessionPool(ctrl)
 	mockSessionPool.EXPECT().GetSessionByUID(table.uid1).Return(s1).Times(1)
@@ -95,7 +95,7 @@ func TestSendKickToUsersFail(t *testing.T) {
 	builder.RPCClient = mockRPCClient
 	app := builder.Build()
 
-	failedUids, err := app.SendKickToUsers([]string{table.uid1, table.uid2}, table.frontendType)
+	failedUids, err := app.SendKickToUsers([]string{table.uid1, table.uid2}, nil, table.frontendType)
 	assert.Len(t, failedUids, 1)
 	assert.Equal(t, failedUids[0], table.uid2)
 	assert.Equal(t, err, table.err)
@@ -127,7 +127,7 @@ func TestSendKickToUsersRemoteSession(t *testing.T) {
 				mockRPCClient.EXPECT().SendKick(uid, gomock.Any(), expectedKick).Return(table.err)
 			}
 
-			failedUids, err := app.SendKickToUsers(table.uids, table.frontendType)
+			failedUids, err := app.SendKickToUsers(table.uids, nil, table.frontendType)
 			assert.Equal(t, err, table.err)
 			if table.err != nil {
 				assert.NotNil(t, failedUids)

@@ -52,7 +52,7 @@ func (u *UniqueSession) OnUserBind(uid, fid string) {
 	oldSession := u.sessionPool.GetSessionByUID(uid)
 	if oldSession != nil {
 		// TODO: it would be nice to set this correctly
-		oldSession.Kick(context.Background())
+		oldSession.Kick(context.Background(), nil)
 	}
 }
 
@@ -61,7 +61,7 @@ func (u *UniqueSession) Init() error {
 	u.sessionPool.OnSessionBind(func(ctx context.Context, s session.Session) error {
 		oldSession := u.sessionPool.GetSessionByUID(s.UID())
 		if oldSession != nil {
-			return oldSession.Kick(ctx)
+			return oldSession.Kick(ctx, nil)
 		}
 		err := u.rpcClient.BroadcastSessionBind(s.UID())
 		return err

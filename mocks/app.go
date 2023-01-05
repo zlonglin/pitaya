@@ -521,9 +521,9 @@ func (mr *MockPitayaMockRecorder) ReliableRPCWithOptions(arg0, arg1, arg2, arg3,
 }
 
 // SendKickToUsers mocks base method
-func (m *MockPitaya) SendKickToUsers(arg0 []string, arg1 string) ([]string, error) {
+func (m *MockPitaya) SendKickToUsers(arg0 []string, data []byte, arg1 string) ([]string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendKickToUsers", arg0, arg1)
+	ret := m.ctrl.Call(m, "SendKickToUsers", arg0, arg1, data)
 	ret0, _ := ret[0].([]string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1

@@ -150,7 +150,7 @@ func SendPushToUsers(route string, v interface{}, uids []string, frontendType st
 }
 
 func SendKickToUsers(uids []string, frontendType string) ([]string, error) {
-	return DefaultApp.SendKickToUsers(uids, frontendType)
+	return DefaultApp.SendKickToUsers(uids, nil, frontendType)
 }
 
 func GroupCreate(ctx context.Context, groupName string) error {

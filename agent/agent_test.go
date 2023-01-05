@@ -143,7 +143,7 @@ func TestKick(t *testing.T) {
 	sessionPool := session.NewSessionPool()
 	ag := newAgent(mockConn, mockDecoder, mockEncoder, mockSerializer, hbTime, 10, dieChan, messageEncoder, nil, sessionPool)
 	c := context.Background()
-	err := ag.Kick(c)
+	err := ag.Kick(c, nil)
 	assert.NoError(t, err)
 }
 

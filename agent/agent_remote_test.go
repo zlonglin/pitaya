@@ -184,7 +184,7 @@ func TestKickRemote(t *testing.T) {
 	c := context.Background()
 	r, _ := route.Decode("sys.kick")
 	rpcClient.EXPECT().Call(c, protos.RPCType_User, r, gomock.Nil(), gomock.Any(), gomock.Nil())
-	err = remote.Kick(c)
+	err = remote.Kick(c, nil)
 
 	assert.NoError(t, err)
 }

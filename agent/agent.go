@@ -104,7 +104,7 @@ type (
 		RemoteAddr() net.Addr
 		String() string
 		GetStatus() int32
-		Kick(ctx context.Context) error
+		Kick(ctx context.Context, data []byte) error
 		SetLastAt()
 		SetStatus(state int32)
 		Handle()
@@ -374,9 +374,9 @@ func (a *agentImpl) GetStatus() int32 {
 }
 
 // Kick sends a kick packet to a client
-func (a *agentImpl) Kick(ctx context.Context) error {
+func (a *agentImpl) Kick(ctx context.Context, data []byte) error {
 	// packet encode
-	p, err := a.encoder.Encode(packet.Kick, nil)
+	p, err := a.encoder.Encode(packet.Kick, data)
 	if err != nil {
 		return err
 	}

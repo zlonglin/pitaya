@@ -43,6 +43,7 @@ func TestBindSession(t *testing.T) {
 	assert.NoError(t, err)
 
 	ss := mocks.NewMockSession(ctrl)
+	ss.EXPECT().Bind(nil, uid)
 
 	sessionPool := mocks.NewMockSessionPool(ctrl)
 	sessionPool.EXPECT().GetSessionByID(id).Return(ss).Times(1)
@@ -178,7 +179,7 @@ func TestKick(t *testing.T) {
 	uid := uuid.New().String()
 
 	ss := mocks.NewMockSession(ctrl)
-	ss.EXPECT().Kick(nil).Return(nil)
+	ss.EXPECT().Kick(nil, nil).Return(nil)
 
 	sessionPool := mocks.NewMockSessionPool(ctrl)
 	sessionPool.EXPECT().GetSessionByUID(uid).Return(ss).Times(1)

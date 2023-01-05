@@ -210,9 +210,9 @@ func TestKick(t *testing.T) {
 	sessionPool := NewSessionPool()
 	ss := sessionPool.NewSession(entity, true)
 	c := context.Background()
-	entity.EXPECT().Kick(c)
+	entity.EXPECT().Kick(c, nil)
 	entity.EXPECT().Close()
-	err := ss.Kick(c)
+	err := ss.Kick(c, nil)
 	assert.NoError(t, err)
 }
 

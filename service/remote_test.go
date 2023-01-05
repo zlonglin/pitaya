@@ -208,7 +208,7 @@ func TestRemoteServiceKickUser(t *testing.T) {
 	nonexistingUID := "uid2"
 
 	mockSession := sessionmocks.NewMockSession(ctrl)
-	mockSession.EXPECT().Kick(context.Background()).Times(1)
+	mockSession.EXPECT().Kick(context.Background(), nil).Times(1)
 
 	mockSessionPool.EXPECT().GetSessionByUID(existingUID).Return(mockSession).Times(1)
 	mockSessionPool.EXPECT().GetSessionByUID(nonexistingUID).Return(nil).Times(1)

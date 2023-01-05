@@ -29,7 +29,7 @@ import (
 )
 
 // SendKickToUsers sends kick to an user array
-func (app *App) SendKickToUsers(uids []string, frontendType string) ([]string, error) {
+func (app *App) SendKickToUsers(uids []string, data []byte, frontendType string) ([]string, error) {
 	if !app.server.Frontend && frontendType == "" {
 		return uids, constants.ErrFrontendTypeNotSpecified
 	}
@@ -38,7 +38,7 @@ func (app *App) SendKickToUsers(uids []string, frontendType string) ([]string, e
 
 	for _, uid := range uids {
 		if s := app.sessionPool.GetSessionByUID(uid); s != nil {
-			if err := s.Kick(context.Background()); err != nil {
+			if err := s.Kick(context.Background(), data); err != nil {
 				notKickedUids = append(notKickedUids, uid)
 				logger.Log.Errorf("Session kick error, ID=%d, UID=%s, ERROR=%s", s.ID(), s.UID(), err.Error())
 			}
