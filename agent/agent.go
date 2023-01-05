@@ -376,7 +376,7 @@ func (a *agentImpl) GetStatus() int32 {
 // Kick sends a kick packet to a client
 func (a *agentImpl) Kick(ctx context.Context, v interface{}) error {
 	payload, err := util.SerializeOrRaw(a.serializer, v)
-	if err != nil {
+	if err != nil && v != nil {
 		payload, err = util.GetErrorPayload(a.serializer, err)
 		if err != nil {
 			return err

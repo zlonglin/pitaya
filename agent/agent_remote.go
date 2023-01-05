@@ -93,7 +93,7 @@ func (a *Remote) Kick(ctx context.Context, v interface{}) error {
 		return constants.ErrNoUIDBind
 	}
 	payload, err := util.SerializeOrRaw(a.serializer, v)
-	if err != nil {
+	if err != nil && v != nil {
 		return err
 	}
 	b, err := proto.Marshal(&protos.KickMsg{
