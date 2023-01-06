@@ -174,6 +174,7 @@ func (pool *sessionPoolImpl) NewSession(entity networkentity.NetworkEntity, fron
 		pool:             pool,
 	}
 	if frontend {
+		s.Set("remoteAddr", entity.RemoteAddr().String())
 		pool.sessionsByID.Store(s.id, s)
 		atomic.AddInt64(&pool.SessionCount, 1)
 	}
