@@ -450,10 +450,22 @@ func (m *MockSession) SetFrontendData(arg0 string, arg1 int64) {
 	m.ctrl.Call(m, "SetFrontendData", arg0, arg1)
 }
 
+func (m *MockSession) GetFrontendSessionID() int64 {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFrontendSessionID")
+	ret0, _ := ret[0].(int64)
+	return ret0
+}
+
 // SetFrontendData indicates an expected call of SetFrontendData
 func (mr *MockSessionMockRecorder) SetFrontendData(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetFrontendData", reflect.TypeOf((*MockSession)(nil).SetFrontendData), arg0, arg1)
+}
+
+func (mr *MockSessionMockRecorder) GetFrontendSessionID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFrontendSessionID", reflect.TypeOf((*MockSession)(nil).GetFrontendSessionID))
 }
 
 // SetHandshakeData mocks base method
