@@ -107,6 +107,11 @@ func (h *HandlerPool) ProcessHandlerMessage(
 		return nil, err
 	}
 
+	// frontend notify handler has no response
+	if !remote && msgType == message.Notify {
+		return nil, nil
+	}
+
 	ret, err := serializeReturn(serializer, resp)
 	if err != nil {
 		return nil, err
