@@ -475,7 +475,7 @@ func (mr *MockSessionMockRecorder) Int8(key interface{}) *gomock.Call {
 }
 
 // Kick mocks base method.
-func (m *MockSession) Kick(ctx context.Context) error {
+func (m *MockSession) Kick(ctx context.Context, v interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Kick", ctx)
 	ret0, _ := ret[0].(error)
@@ -483,7 +483,7 @@ func (m *MockSession) Kick(ctx context.Context) error {
 }
 
 // Kick indicates an expected call of Kick.
-func (mr *MockSessionMockRecorder) Kick(ctx interface{}) *gomock.Call {
+func (mr *MockSessionMockRecorder) Kick(ctx interface{}, v interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Kick", reflect.TypeOf((*MockSession)(nil).Kick), ctx)
 }
@@ -623,6 +623,12 @@ func (mr *MockSessionMockRecorder) SetDataEncoded(encodedData interface{}) *gomo
 func (m *MockSession) SetFrontendData(frontendID string, frontendSessionID int64) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "SetFrontendData", frontendID, frontendSessionID)
+}
+
+func (m *MockSession) GetFrontendSessionID() int64 {
+	ret := m.ctrl.Call(m, "GetFrontendData")
+	ret1, _ := ret[1].(int64)
+	return ret1
 }
 
 // SetFrontendData indicates an expected call of SetFrontendData.
