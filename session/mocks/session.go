@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	fmt "fmt"
 	context "context"
 	net "net"
 	reflect "reflect"
@@ -625,11 +626,19 @@ func (m *MockSession) SetFrontendData(frontendID string, frontendSessionID int64
 	m.ctrl.Call(m, "SetFrontendData", frontendID, frontendSessionID)
 }
 
-func (m *MockSession) GetFrontendSessionID() int64 {
+// func (m *MockSession) GetFrontendSessionID() int64 {
+// 	ret := m.ctrl.Call(m, "GetFrontendData")
+// 	ret1, _ := ret[1].(int64)
+// 	return ret1
+// }
+
+func (m *MockSession) GetUniqueID() string {
 	ret := m.ctrl.Call(m, "GetFrontendData")
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(int64)
-	return ret1
+	return fmt.Sprintf("%s:%d", ret0, ret1)
 }
+
 
 // SetFrontendData indicates an expected call of SetFrontendData.
 func (mr *MockSessionMockRecorder) SetFrontendData(frontendID, frontendSessionID interface{}) *gomock.Call {

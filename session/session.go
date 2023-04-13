@@ -23,6 +23,7 @@ package session
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net"
 	"reflect"
 	"sync"
@@ -92,12 +93,12 @@ type sessionImpl struct {
 	frontendID        string                      // the id of the frontend that owns the session
 	frontendSessionID int64                       // the id of the session on the frontend server
 	Subscriptions     []*nats.Subscription        // subscription created on bind when using nats rpc server
-	requestsInFlight  ReqInFlight           // whether the session is waiting from a response from a remote
+	requestsInFlight  ReqInFlight                 // whether the session is waiting from a response from a remote
 	pool              *sessionPoolImpl
 }
 
 type ReqInFlight struct {
-	m map[string]string
+	m  map[string]string
 	mu sync.RWMutex
 }
 
@@ -125,7 +126,9 @@ type Session interface {
 	GetDataEncoded() []byte
 	SetDataEncoded(encodedData []byte) error
 	SetFrontendData(frontendID string, frontendSessionID int64)
-	GetFrontendSessionID() int64
+	// GetFrontendSessionID() int64 // 这个接口就没必要存在了
+	// frontendID + frontendSessionID组成的唯一key
+	GetUniqueID() string
 	Bind(ctx context.Context, uid string) error
 	Kick(ctx context.Context, v interface{}) error
 	OnClose(c func()) error
@@ -279,7 +282,7 @@ func (pool *sessionPoolImpl) CloseAll() {
 			if s.HasRequestsInFlight() {
 				reqsInFlight := s.GetRequestsInFlight()
 				reqsInFlight.mu.RLock()
-				for _,route := range reqsInFlight.m {
+				for _, route := range reqsInFlight.m {
 					logger.Log.Debugf("Session for user %s is waiting on a response for route %s from a remote server. Delaying session close.", s.UID(), route)
 				}
 				reqsInFlight.mu.RUnlock()
@@ -399,8 +402,17 @@ func (s *sessionImpl) SetFrontendData(frontendID string, frontendSessionID int64
 	s.frontendSessionID = frontendSessionID
 }
 
-func (s *sessionImpl) GetFrontendSessionID() int64 {
-	return s.frontendSessionID
+// func (s *sessionImpl) GetFrontendSessionID() int64 {
+// 	return s.frontendSessionID
+// }
+
+func (s *sessionImpl) GetUniqueID() string {
+	if s.IsFrontend {
+		logger.Log.Debug("can not call GetUniqueID in frontend.")
+		return ""
+	} else {
+		return fmt.Sprintf("%s:%d", s.frontendID, s.frontendSessionID)
+	}
 }
 
 // Bind bind UID to current session
