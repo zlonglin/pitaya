@@ -126,7 +126,7 @@ type Session interface {
 	GetDataEncoded() []byte
 	SetDataEncoded(encodedData []byte) error
 	SetFrontendData(frontendID string, frontendSessionID int64)
-	// GetFrontendSessionID() int64 // 这个接口就没必要存在了
+	GetFrontendSessionID() int64 // 这个接口就没必要存在了
 	// frontendID + frontendSessionID组成的唯一key
 	GetUniqueID() string
 	Bind(ctx context.Context, uid string, param ...interface{}) error
@@ -402,9 +402,9 @@ func (s *sessionImpl) SetFrontendData(frontendID string, frontendSessionID int64
 	s.frontendSessionID = frontendSessionID
 }
 
-// func (s *sessionImpl) GetFrontendSessionID() int64 {
-// 	return s.frontendSessionID
-// }
+func (s *sessionImpl) GetFrontendSessionID() int64 {
+	return s.frontendSessionID
+}
 
 func (s *sessionImpl) GetUniqueID() string {
 	if s.IsFrontend {

@@ -186,7 +186,7 @@ func (m *MockSession) EXPECT() *MockSessionMockRecorder {
 }
 
 // Bind mocks base method.
-func (m *MockSession) Bind(ctx context.Context, uid string) error {
+func (m *MockSession) Bind(ctx context.Context, uid string, param ...interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Bind", ctx, uid)
 	ret0, _ := ret[0].(error)
@@ -626,11 +626,11 @@ func (m *MockSession) SetFrontendData(frontendID string, frontendSessionID int64
 	m.ctrl.Call(m, "SetFrontendData", frontendID, frontendSessionID)
 }
 
-// func (m *MockSession) GetFrontendSessionID() int64 {
-// 	ret := m.ctrl.Call(m, "GetFrontendData")
-// 	ret1, _ := ret[1].(int64)
-// 	return ret1
-// }
+func (m *MockSession) GetFrontendSessionID() int64 {
+	ret := m.ctrl.Call(m, "GetFrontendData")
+	ret1, _ := ret[1].(int64)
+	return ret1
+}
 
 func (m *MockSession) GetUniqueID() string {
 	ret := m.ctrl.Call(m, "GetFrontendData")

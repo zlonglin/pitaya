@@ -89,17 +89,23 @@ func NewRemote(
 
 // Kick kicks the user
 func (a *Remote) Kick(ctx context.Context, v interface{}) error {
-	if a.Session.UID() == "" {
-		return constants.ErrNoUIDBind
-	}
+	// if a.Session.UID() == "" {
+	// 	return constants.ErrNoUIDBind
+	// }
 	payload, err := util.SerializeOrRaw(a.serializer, v)
 	if err != nil && v != nil {
 		return err
 	}
-	b, err := proto.Marshal(&protos.KickMsg{
-		UserId: a.Session.UID(),
-		Data:   payload,
-	})
+	msg := &protos.KickMsg{
+		// UserId: a.Session.UID(),
+		SessionId: a.Session.GetFrontendSessionID(),
+		Data:      payload,
+	}
+	if a.Session.UID() != "" {
+		msg.UserId = a.Session.UID()
+	}
+	b, err := proto.Marshal(msg)
+
 	if err != nil {
 		return err
 	}
