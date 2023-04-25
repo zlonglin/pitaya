@@ -49,6 +49,11 @@ func (s *Sys) BindSession(ctx context.Context, sessionData *protos.Session) (*pr
 	if err := sess.Bind(ctx, sessionData.Uid); err != nil {
 		return nil, err
 	}
+	if sessionData.Data != nil {
+		if err := sess.SetDataEncoded(sessionData.Data); err != nil {
+			return nil, err
+		}
+	}
 	return &protos.Response{Data: []byte("ack")}, nil
 }
 

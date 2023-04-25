@@ -129,7 +129,7 @@ type Session interface {
 	// GetFrontendSessionID() int64 // 这个接口就没必要存在了
 	// frontendID + frontendSessionID组成的唯一key
 	GetUniqueID() string
-	Bind(ctx context.Context, uid string) error
+	Bind(ctx context.Context, uid string, param ...interface{}) error
 	Kick(ctx context.Context, v interface{}) error
 	OnClose(c func()) error
 	Close()
@@ -416,7 +416,7 @@ func (s *sessionImpl) GetUniqueID() string {
 }
 
 // Bind bind UID to current session
-func (s *sessionImpl) Bind(ctx context.Context, uid string) error {
+func (s *sessionImpl) Bind(ctx context.Context, uid string, param ...interface{}) error {
 	if uid == "" {
 		return constants.ErrIllegalUID
 	}
@@ -448,7 +448,14 @@ func (s *sessionImpl) Bind(ctx context.Context, uid string) error {
 	} else {
 		// If frontentID is set this means it is a remote call and the current server
 		// is not the frontend server that received the user request
-		err := s.bindInFront(ctx)
+		withData := false
+		if len(param) > 0 {
+			v := reflect.ValueOf(param[0])
+			if v.Kind() == reflect.Bool && v.Bool() {
+				withData = true
+			}
+		}
+		err := s.bindInFront(ctx, withData)
 		if err != nil {
 			logger.Log.Error("error while trying to push session to front: ", err)
 			s.uid = ""
@@ -771,8 +778,8 @@ func (s *sessionImpl) Value(key string) interface{} {
 	return s.data[key]
 }
 
-func (s *sessionImpl) bindInFront(ctx context.Context) error {
-	return s.sendRequestToFront(ctx, constants.SessionBindRoute, false)
+func (s *sessionImpl) bindInFront(ctx context.Context, includeData bool) error {
+	return s.sendRequestToFront(ctx, constants.SessionBindRoute, includeData)
 }
 
 // PushToFront updates the session in the frontend
