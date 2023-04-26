@@ -40,6 +40,14 @@ func (app *App) RPCTo(ctx context.Context, serverID, routeStr string, reply prot
 	return app.doSendRPC(ctx, serverID, routeStr, reply, arg)
 }
 
+func (app *App) RPCNotify(ctx context.Context, routeStr string, arg proto.Message) error {
+	return app.doSendRPCNotify(ctx, "", routeStr, arg)
+}
+
+func (app *App) RPCToNotify(ctx context.Context, serverID, routeStr string, arg proto.Message) error {
+	return app.doSendRPCNotify(ctx, serverID, routeStr, arg)
+}
+
 // ReliableRPC enqueues RPC to worker so it's executed asynchronously
 // Default enqueue options are used
 func (app *App) ReliableRPC(
@@ -84,4 +92,25 @@ func (app *App) doSendRPC(ctx context.Context, serverID, routeStr string, reply 
 	}
 
 	return app.remoteService.RPC(ctx, serverID, r, reply, arg)
+}
+
+func (app *App) doSendRPCNotify(ctx context.Context, serverID, routeStr string, arg proto.Message) error {
+	if app.rpcServer == nil {
+		return constants.ErrRPCServerNotInitialized
+	}
+
+	r, err := route.Decode(routeStr)
+	if err != nil {
+		return err
+	}
+
+	if r.SvType == "" {
+		return constants.ErrNoServerTypeChosenForRPC
+	}
+
+	if (r.SvType == app.server.Type && serverID == "") || serverID == app.server.ID {
+		return constants.ErrNonsenseRPC
+	}
+
+	return app.remoteService.RPCNotify(ctx, serverID, r, arg)
 }

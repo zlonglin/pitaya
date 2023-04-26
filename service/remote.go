@@ -282,6 +282,35 @@ func (r *RemoteService) RPC(ctx context.Context, serverID string, route *route.R
 	return nil
 }
 
+// RPC makes rpcs
+func (r *RemoteService) RPCNotify(ctx context.Context, serverID string, route *route.Route, arg proto.Message) error {
+	var data []byte
+	var err error
+	if arg != nil {
+		data, err = proto.Marshal(arg)
+		if err != nil {
+			return err
+		}
+	}
+	go func() {
+		res, err := r.DoRPC(ctx, serverID, route, data)
+		if err != nil {
+			logger.Log.Errorf("error DoRPC serverId %s, route %s, error %s", serverID, route.String(), err.Error())
+			return
+		}
+
+		if res.Error != nil {
+			err := &e.Error{
+				Code:     res.Error.Code,
+				Message:  res.Error.Msg,
+				Metadata: res.Error.Metadata,
+			}
+			logger.Log.Errorf("DoRPC respond error, serverId %s, route %s, error %v", serverID, route.String(), err)
+		}
+	}()
+	return nil
+}
+
 // Register registers components
 func (r *RemoteService) Register(comp component.Component, opts []component.Option) error {
 	s := component.NewService(comp, opts)
